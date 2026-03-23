@@ -186,24 +186,7 @@ footer{background:var(--dk);color:rgba(255,255,255,0.6);padding:44px 32px 22px;m
 </div>
 
 <script>
-var PRODUCTS=[
-{id:1,name:"Wireless Headphones",cat:"electronics",img:"https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600&q=80",price:89.99,old:129.99,rating:4.8,rv:234,badge:"SALE",desc:"Premium wireless headphones with active noise cancellation. 30-hour battery life, comfortable over-ear design.",stock:15},
-{id:2,name:"Smart Watch Pro",cat:"electronics",img:"https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&q=80",price:199.99,old:249.99,rating:4.7,rv:189,badge:"HOT",desc:"Smartwatch with health monitoring, GPS tracking, and 7-day battery life.",stock:8},
-{id:3,name:"4K Action Camera",cat:"electronics",img:"https://images.unsplash.com/photo-1502920917128-1aa500764cbd?w=600&q=80",price:149.99,old:199.99,rating:4.6,rv:156,badge:"SALE",desc:"Waterproof 4K camera with image stabilization. Perfect for sports and adventure.",stock:20},
-{id:4,name:"Bluetooth Speaker",cat:"electronics",img:"https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=600&q=80",price:59.99,old:79.99,rating:4.5,rv:312,badge:"",desc:"360-degree surround sound, waterproof IPX7, 24-hour playtime.",stock:30},
-{id:5,name:"Premium Leather Jacket",cat:"fashion",img:"https://images.unsplash.com/photo-1551028719-00167b16eac5?w=600&q=80",price:179.99,old:229.99,rating:4.9,rv:89,badge:"NEW",desc:"Genuine leather jacket with premium stitching. Classic style meets modern design.",stock:12},
-{id:6,name:"Running Shoes Ultra",cat:"fashion",img:"https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600&q=80",price:119.99,old:159.99,rating:4.7,rv:445,badge:"HOT",desc:"Lightweight running shoes with responsive cushioning and breathable mesh upper.",stock:25},
-{id:7,name:"Designer Sunglasses",cat:"fashion",img:"https://images.unsplash.com/photo-1511499767150-a48a237f0083?w=600&q=80",price:69.99,old:99.99,rating:4.6,rv:167,badge:"SALE",desc:"UV400 protection polarized lenses. Lightweight, scratch-resistant coating.",stock:18},
-{id:8,name:"Cotton T-Shirt Pack x3",cat:"fashion",img:"https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=600&q=80",price:34.99,old:49.99,rating:4.4,rv:523,badge:"",desc:"Pack of 3 premium cotton t-shirts. Soft, breathable, available in multiple colors.",stock:50},
-{id:9,name:"Coffee Machine Deluxe",cat:"home",img:"https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=600&q=80",price:129.99,old:179.99,rating:4.8,rv:201,badge:"HOT",desc:"Automatic coffee machine with built-in grinder, milk frother and programmable timer.",stock:10},
-{id:10,name:"Air Purifier HEPA",cat:"home",img:"https://images.unsplash.com/photo-1585771724684-38269d6639fd?w=600&q=80",price:89.99,old:119.99,rating:4.7,rv:134,badge:"NEW",desc:"True HEPA filter removes 99.97% of particles. Covers up to 50m2.",stock:14},
-{id:11,name:"Yoga Mat Premium",cat:"sports",img:"https://images.unsplash.com/photo-1601925228897-b7ed5e97c26b?w=600&q=80",price:44.99,old:59.99,rating:4.6,rv:289,badge:"",desc:"Extra thick non-slip yoga mat. Eco-friendly, 6mm joint cushioning.",stock:35},
-{id:12,name:"Protein Shaker Bottle",cat:"sports",img:"https://images.unsplash.com/photo-1593095948071-474c5cc2989d?w=600&q=80",price:19.99,old:29.99,rating:4.5,rv:678,badge:"",desc:"BPA-free shaker bottle, 700ml capacity, leak-proof, dishwasher safe.",stock:100},
-{id:13,name:"Skincare Gift Set",cat:"beauty",img:"https://images.unsplash.com/photo-1556228578-8c89e6adf883?w=600&q=80",price:79.99,old:109.99,rating:4.8,rv:145,badge:"NEW",desc:"Complete skincare set: cleanser, toner, moisturizer and serum. All skin types.",stock:22},
-{id:14,name:"Electric Toothbrush",cat:"beauty",img:"https://images.unsplash.com/photo-1607613009820-a29f7bb81c04?w=600&q=80",price:54.99,old:74.99,rating:4.7,rv:367,badge:"SALE",desc:"Sonic toothbrush with 5 cleaning modes. 2-minute timer, 30-day battery.",stock:28},
-{id:15,name:"Kids Learning Tablet",cat:"kids",img:"https://images.unsplash.com/photo-1585790050230-5dd28404ccb9?w=600&q=80",price:99.99,old:139.99,rating:4.8,rv:256,badge:"HOT",desc:"Educational tablet for kids 3-12. Parental controls, 5000+ learning games.",stock:16},
-{id:16,name:"Board Game Collection",cat:"kids",img:"https://images.unsplash.com/photo-1610890716171-6b1bb98ffd09?w=600&q=80",price:39.99,old:54.99,rating:4.9,rv:178,badge:"NEW",desc:"10 classic board games. Family fun for ages 4 and above.",stock:40},
-];
+var PRODUCTS=[];fetch("https://nnit-office-backend-production.up.railway.app/products?limit=2000").then(function(r){return r.json();}).then(function(data){PRODUCTS=data.map(function(p){return{id:p._id,name:p.name,cat:p.category,img:p.image,price:p.price,old:p.oldPrice,rating:4.7,rv:100,badge:p.badge,desc:p.description,stock:p.stock};});goHome();});
 
 var CATS=[{id:"all",lbl:"ALL",name:"All Products"},{id:"electronics",lbl:"TECH",name:"Electronics"},{id:"fashion",lbl:"STYLE",name:"Fashion"},{id:"home",lbl:"HOME",name:"Home"},{id:"sports",lbl:"SPORT",name:"Sports"},{id:"beauty",lbl:"BEAUTY",name:"Beauty"},{id:"kids",lbl:"KIDS",name:"Kids"},{id:"garden",lbl:"GARDEN",name:"Garden"},{id:"pets",lbl:"PETS",name:"Pets"},{id:"office",lbl:"OFFICE",name:"Office"},{id:"food",lbl:"FOOD",name:"Food"}];
 
@@ -534,10 +517,10 @@ function showToast(msg){
 }
 
 updateBadges();
-goHome();
 </script>
 </body>
 </html>
+
 
 
 
