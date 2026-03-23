@@ -191,6 +191,7 @@ footer{background:var(--dk);color:rgba(255,255,255,0.6);padding:44px 32px 22px;m
 
 var PRODUCTS=[];
 fetch("https://nnit-office-backend-production.up.railway.app/products").then(function(r){return r.json();}).then(function(data){PRODUCTS=data.map(function(p){return{id:p._id,name:p.name,cat:p.category,img:p.image,price:p.price,old:p.oldPrice,rating:4.7,rv:100,badge:p.badge,desc:p.description,stock:p.stock};});goHome();});
+fetch("https://nnit-office-backend-production.up.railway.app/products").then(function(r){return r.json();}).then(function(data){PRODUCTS=data.map(function(p){return{id:p._id,name:p.name,cat:p.category,img:p.image,price:p.price,old:p.oldPrice,rating:4.7,rv:100,badge:p.badge,desc:p.description,stock:p.stock};});goHome();});
 fetch("https://nnit-office-backend-production.up.railway.app/products")
   .then(function(r){return r.json();})
   .then(function(data){
@@ -542,6 +543,7 @@ updateBadges();
 </script>
 </body>
 </html>
+
 
 
 
