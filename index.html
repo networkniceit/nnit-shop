@@ -150,7 +150,11 @@ footer{background:var(--dk);color:rgba(255,255,255,0.6);padding:44px 32px 22px;m
     <a onclick="goShop('all')">Shop</a>
     <a onclick="goShop('electronics')">Electronics</a>
     <a onclick="goShop('fashion')">Fashion</a>
-    <a onclick="goShop('home')">Home</a><a onclick="goShop('garden')">Garden</a><a onclick="goShop('pets')">Pets</a><a onclick="goShop('office')">Office</a><a onclick="goShop('food')">Food</a>
+    <a onclick="goShop('home')">Home</a>
+    <a onclick="goShop('garden')">Garden</a>
+    <a onclick="goShop('pets')">Pets</a>
+    <a onclick="goShop('office')">Office</a>
+    <a onclick="goShop('food')">Food</a>
     <a onclick="goPage('about')">About</a>
   </nav>
   <div class="ta">
@@ -186,19 +190,42 @@ footer{background:var(--dk);color:rgba(255,255,255,0.6);padding:44px 32px 22px;m
 </div>
 
 <script>
-var PRODUCTS=[];fetch("https://nnit-office-backend-production.up.railway.app/products?limit=2000").then(function(r){return r.json();}).then(function(data){PRODUCTS=data.map(function(p){return{id:p._id,name:p.name,cat:p.category,img:p.image,price:p.price,old:p.oldPrice,rating:4.7,rv:100,badge:p.badge,desc:p.description,stock:p.stock};});goHome();});
+var PRODUCTS=[];
+var API="https://nnit-office-backend-production.up.railway.app";
 
-var CATS=[{id:"all",lbl:"ALL",name:"All Products"},{id:"electronics",lbl:"TECH",name:"Electronics"},{id:"fashion",lbl:"STYLE",name:"Fashion"},{id:"home",lbl:"HOME",name:"Home"},{id:"sports",lbl:"SPORT",name:"Sports"},{id:"beauty",lbl:"BEAUTY",name:"Beauty"},{id:"kids",lbl:"KIDS",name:"Kids"},{id:"garden",lbl:"GARDEN",name:"Garden"},{id:"pets",lbl:"PETS",name:"Pets"},{id:"office",lbl:"OFFICE",name:"Office"},{id:"food",lbl:"FOOD",name:"Food"}];
+fetch(API+"/products?limit=2000")
+  .then(function(r){return r.json();})
+  .then(function(data){
+    PRODUCTS=data.map(function(p){
+      return{id:String(p._id),name:p.name,cat:p.category,img:p.image,price:p.price,old:p.oldPrice,rating:4.7,rv:100,badge:p.badge,desc:p.description,stock:p.stock};
+    });
+    goHome();
+  });
 
-var cart=JSON.parse(localStorage.getItem("nc2")||"[]");
-var wish=JSON.parse(localStorage.getItem("nw2")||"[]");
+var CATS=[
+  {id:"all",lbl:"ALL",name:"All Products"},
+  {id:"electronics",lbl:"TECH",name:"Electronics"},
+  {id:"fashion",lbl:"STYLE",name:"Fashion"},
+  {id:"home",lbl:"HOME",name:"Home"},
+  {id:"sports",lbl:"SPORT",name:"Sports"},
+  {id:"beauty",lbl:"BEAUTY",name:"Beauty"},
+  {id:"kids",lbl:"KIDS",name:"Kids"},
+  {id:"garden",lbl:"GARDEN",name:"Garden"},
+  {id:"pets",lbl:"PETS",name:"Pets"},
+  {id:"office",lbl:"OFFICE",name:"Office"},
+  {id:"food",lbl:"FOOD",name:"Food"}
+];
+
+var cart=JSON.parse(localStorage.getItem("nc3")||"[]");
+var wish=JSON.parse(localStorage.getItem("nw3")||"[]");
 var curCat="all";
 var curSort="f";
 var curSearch="";
 var mQty=1;
+var curModalId=null;
 
-function saveCart(){localStorage.setItem("nc2",JSON.stringify(cart));}
-function saveWish(){localStorage.setItem("nw2",JSON.stringify(wish));}
+function saveCart(){localStorage.setItem("nc3",JSON.stringify(cart));}
+function saveWish(){localStorage.setItem("nw3",JSON.stringify(wish));}
 function cartCount(){return cart.reduce(function(s,i){return s+i.qty;},0);}
 function cartTotal(){return cart.reduce(function(s,i){return s+i.price*i.qty;},0);}
 
@@ -212,11 +239,12 @@ function updateBadges(){
 function addToCart(id,qty){
   qty=qty||1;
   var p=PRODUCTS.find(function(x){return x.id===id;});
-  if(!p)return;
+  if(!p){return;}
   var ex=cart.find(function(x){return x.id===id;});
-  if(ex)ex.qty+=qty;
-  else cart.push({id:p.id,name:p.name,price:p.price,img:p.img,qty:qty});
-  saveCart();updateBadges();
+  if(ex){ex.qty+=qty;}
+  else{cart.push({id:p.id,name:p.name,price:p.price,img:p.img,qty:qty});}
+  saveCart();
+  updateBadges();
   showToast(p.name+" added to cart");
   renderCart();
 }
@@ -262,16 +290,17 @@ function renderCart(){
     return;
   }
   body.innerHTML=cart.map(function(item){
+    var eid=item.id.replace(/'/g,"");
     return '<div class="citem">'+
       '<div class="cimg"><img src="'+item.img+'" alt="'+item.name+'"></div>'+
       '<div style="flex:1">'+
         '<div class="cname">'+item.name+'</div>'+
         '<div class="cprice">EUR '+item.price.toFixed(2)+'</div>'+
         '<div class="qrow">'+
-          '<button class="qbtn" onclick="changeQty('+item.id+',-1)">-</button>'+
+          '<button class="qbtn" onclick="changeQty(\''+eid+'\',-1)">-</button>'+
           '<span class="qval">'+item.qty+'</span>'+
-          '<button class="qbtn" onclick="changeQty('+item.id+',1)">+</button>'+
-          '<button onclick="removeFromCart('+item.id+')" style="margin-left:8px;background:none;border:none;color:var(--rd);cursor:pointer;font-size:12px;font-family:var(--f)">Remove</button>'+
+          '<button class="qbtn" onclick="changeQty(\''+eid+'\',1)">+</button>'+
+          '<button onclick="removeFromCart(\''+eid+'\')" style="margin-left:8px;background:none;border:none;color:var(--rd);cursor:pointer;font-size:12px;font-family:var(--f)">Remove</button>'+
         '</div>'+
       '</div>'+
     '</div>';
@@ -309,11 +338,12 @@ function pcard(p){
   var disc=p.old?Math.round((1-p.price/p.old)*100):0;
   var w=isWished(p.id);
   var bc=p.badge==="NEW"?"new":p.badge==="HOT"?"hot":p.badge==="SALE"?"sale":"";
-  return '<div class="pcard" onclick="openModal('+p.id+')">'+
+  var eid=p.id.replace(/'/g,"");
+  return '<div class="pcard" onclick="openModal(\''+eid+'\')">'+
     '<div class="pimg">'+
       '<img src="'+p.img+'" alt="'+p.name+'" loading="lazy">'+
       (p.badge?'<div class="pbadge '+bc+'">'+p.badge+'</div>':'')+
-      '<div class="pwish'+(w?" on":"")+'" onclick="event.stopPropagation();twUI('+p.id+',this)">'+(w?"H":"W")+'</div>'+
+      '<div class="pwish'+(w?" on":"")+'" onclick="event.stopPropagation();twUI(\''+eid+'\',this)">'+(w?"&#10084;":"&#9825;")+'</div>'+
     '</div>'+
     '<div class="pinfo">'+
       '<div class="pcat">'+p.cat.toUpperCase()+'</div>'+
@@ -324,7 +354,7 @@ function pcard(p){
         (p.old?'<span class="pold">EUR '+p.old.toFixed(2)+'</span>':'')+
         (disc>0?'<span class="psave">-'+disc+'%</span>':'')+
       '</div>'+
-      '<button class="btn-cart" onclick="event.stopPropagation();addToCart('+p.id+')">Add to Cart</button>'+
+      '<button class="btn-cart" onclick="event.stopPropagation();addToCart(\''+eid+'\')">Add to Cart</button>'+
     '</div>'+
   '</div>';
 }
@@ -332,15 +362,17 @@ function pcard(p){
 function twUI(id,el){
   toggleWish(id);
   var w=isWished(id);
-  el.textContent=w?"H":"W";
+  el.innerHTML=w?"&#10084;":"&#9825;";
   el.classList.toggle("on",w);
 }
 
 function openModal(id){
+  curModalId=id;
   var p=PRODUCTS.find(function(x){return x.id===id;});
   if(!p)return;
   mQty=1;
   var disc=p.old?Math.round((1-p.price/p.old)*100):0;
+  var eid=p.id.replace(/'/g,"");
   document.getElementById("modal-img").innerHTML='<img src="'+p.img+'" alt="'+p.name+'" style="width:100%;height:100%;object-fit:cover">';
   document.getElementById("modal-info").innerHTML=
     '<div class="modal-cat">'+p.cat.toUpperCase()+'</div>'+
@@ -358,8 +390,8 @@ function openModal(id){
       '<button class="qbtn" onclick="chgMQ(1)">+</button>'+
     '</div>'+
     '<div class="modal-actions">'+
-      '<button class="btn-cart" style="padding:13px;font-size:14px" onclick="addToCart('+p.id+',mQty);closeModal()">Add to Cart</button>'+
-      '<button onclick="toggleWish('+p.id+');showToast(\'Added to wishlist\')" style="width:100%;background:none;border:1px solid var(--br);padding:11px;border-radius:8px;font-size:14px;font-family:var(--f);cursor:pointer">+ Add to Wishlist</button>'+
+      '<button class="btn-cart" style="padding:13px;font-size:14px" onclick="addToCart(\''+eid+'\',mQty);closeModal()">Add to Cart</button>'+
+      '<button onclick="toggleWish(\''+eid+'\');showToast(\'Added to wishlist\')" style="width:100%;background:none;border:1px solid var(--br);padding:11px;border-radius:8px;font-size:14px;font-family:var(--f);cursor:pointer">+ Add to Wishlist</button>'+
     '</div>';
   document.getElementById("modal-ov").style.display="flex";
 }
@@ -374,9 +406,16 @@ function doSearch(val){
 
 function goHome(){
   curSearch="";
-  document.getElementById("search-inp").value="";
-  var featured=PRODUCTS.filter(function(p){return p.badge==="HOT"||p.badge==="NEW";}).slice(0,4);
-  var best=PRODUCTS.slice().sort(function(a,b){return b.rv-a.rv;}).slice(0,4);
+  var inp=document.getElementById("search-inp");
+  if(inp)inp.value="";
+  var cats=["electronics","fashion","home","sports","beauty","kids","garden","pets","office","food"];
+  var featured=[];
+  cats.forEach(function(c){
+    var cp=PRODUCTS.filter(function(p){return p.cat===c&&(p.badge==="HOT"||p.badge==="NEW");});
+    if(cp.length)featured.push(cp[0]);
+  });
+  featured=featured.slice(0,8);
+  var best=PRODUCTS.slice().sort(function(a,b){return b.rv-a.rv;}).slice(0,8);
   var html=
     '<div class="hero">'+
       '<div>'+
@@ -475,10 +514,11 @@ function goPage(page){
     var wishItems=wish.map(function(id){
       var p=PRODUCTS.find(function(x){return x.id===id;});
       if(!p)return "";
+      var eid=p.id.replace(/'/g,"");
       return '<div style="display:flex;gap:12px;align-items:center;padding:10px 0;border-bottom:1px solid var(--br)">'+
         '<div style="width:52px;height:52px;border-radius:8px;overflow:hidden"><img src="'+p.img+'" style="width:100%;height:100%;object-fit:cover"></div>'+
         '<div style="flex:1"><div style="font-size:13px;font-weight:600">'+p.name+'</div><div style="font-size:12px;color:var(--t2)">EUR '+p.price.toFixed(2)+'</div></div>'+
-        '<button onclick="addToCart('+p.id+')" class="btn-cart" style="width:auto;padding:6px 14px">Add</button>'+
+        '<button onclick="addToCart(\''+eid+'\')" class="btn-cart" style="width:auto;padding:6px 14px">Add</button>'+
       '</div>';
     }).join("");
     document.getElementById("page").innerHTML=
@@ -502,7 +542,7 @@ function renderFooter(){
   return '<footer>'+
     '<div class="fg">'+
       '<div><div class="fb">NNIT.SHOP</div><div class="fd">Your trusted online marketplace. Quality products, fast delivery worldwide.</div></div>'+
-      '<div><div class="ft">SHOP</div><span class="fl" onclick="goShop(\'electronics\')">Electronics</span><span class="fl" onclick="goShop(\'fashion\')">Fashion</span><span class="fl" onclick="goShop(\'home\')">Home</span><span class="fl" onclick="goShop(\'sports\')">Sports</span></div>'+
+      '<div><div class="ft">SHOP</div><span class="fl" onclick="goShop(\'electronics\')">Electronics</span><span class="fl" onclick="goShop(\'fashion\')">Fashion</span><span class="fl" onclick="goShop(\'home\')">Home</span><span class="fl" onclick="goShop(\'sports\')">Sports</span><span class="fl" onclick="goShop(\'garden\')">Garden</span><span class="fl" onclick="goShop(\'pets\')">Pets</span></div>'+
       '<div><div class="ft">HELP</div><span class="fl">Shipping Info</span><span class="fl">Returns</span><span class="fl">FAQ</span><span class="fl">Contact Us</span></div>'+
       '<div><div class="ft">COMPANY</div><span class="fl" onclick="goPage(\'about\')">About Us</span><span class="fl">Blog</span><span class="fl">Careers</span><span class="fl">Privacy Policy</span></div>'+
     '</div>'+
@@ -519,11 +559,4 @@ function showToast(msg){
 updateBadges();
 </script>
 </body>
-</html>
-
-
-
-
-
-   
- 
+</html> 
