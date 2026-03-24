@@ -318,7 +318,7 @@ function doCheckout(){
 
 function getFiltered(){
   var f=PRODUCTS.filter(function(p){
-    var cm=curCat==="all"||p.cat===curCat;
+    var pcat=(p.cat||"").toLowerCase().trim();var cm=curCat==="all"||pcat===curCat.toLowerCase().trim();
     var sm=!curSearch||p.name.toLowerCase().indexOf(curSearch.toLowerCase())>=0||p.cat.toLowerCase().indexOf(curSearch.toLowerCase())>=0;
     return cm&&sm;
   });
