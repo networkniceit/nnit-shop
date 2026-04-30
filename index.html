@@ -197,7 +197,7 @@ fetch(API+"/api/products?limit=2000")
   .then(function(r){return r.json();})
   .then(function(data){
     PRODUCTS=data.products.map(function(p){
-      return{id:String(p.id),name:p.name,cat:p.category,img:p.image,price:p.price,old:p.original_price,rating:4.7,rv:100,badge:p.badge,desc:p.description,stock:p.stock};
+      return{id:String(p.id),name:p.name,cat:p.category,img:p.image,price:parseFloat(p.price),old:parseFloat(p.original_price),rating:4.7,rv:100,badge:p.badge,desc:p.description,stock:p.stock};
     });
     goHome();
   });
@@ -560,6 +560,7 @@ updateBadges();
 </script>
 </body>
 </html> 
+
 
 
 
