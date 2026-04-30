@@ -196,8 +196,8 @@ var API="https://nnit-ai-freelance-backend-production.up.railway.app";
 fetch(API+"/api/products?limit=2000")
   .then(function(r){return r.json();})
   .then(function(data){
-    PRODUCTS=data.map(function(p){
-      return{id:String(p._id),name:p.name,cat:p.category,img:p.image,price:p.price,old:p.oldPrice,rating:4.7,rv:100,badge:p.badge,desc:p.description,stock:p.stock};
+    PRODUCTS=data.products.map(function(p){
+      return{id:String(p.id),name:p.name,cat:p.category,img:p.image,price:p.price,old:p.original_price,rating:4.7,rv:100,badge:p.badge,desc:p.description,stock:p.stock};
     });
     goHome();
   });
@@ -560,5 +560,6 @@ updateBadges();
 </script>
 </body>
 </html> 
+
 
 
