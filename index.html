@@ -318,7 +318,7 @@ function doCheckout(){
 
 function getFiltered(){
   var f=PRODUCTS.filter(function(p){
-    var pcat=(p.cat||"").toLowerCase().trim();var cm=curCat==="all"||pcat===curCat.toLowerCase().trim();var gmap={women:["fashion","beauty","clothing"],men:["electronics","sports","office"],children:["kids"]};var gm=curGender==="all"||(gmap[curGender]&&gmap[curGender].indexOf(pcat)>=0);var gmap={women:["fashion","beauty"],men:["electronics","sports","office"],children:["kids"]};var gm=curGender==="all"||(gmap[curGender]&&gmap[curGender].indexOf(pcat)>=0);
+    var pcat=(p.cat||"").toLowerCase().trim();var catmap={"clothing":"fashion","style":"fashion"};pcat=catmap[pcat]||pcat;var cm=curCat==="all"||pcat===curCat.toLowerCase().trim();var gmap={women:["fashion","beauty","clothing"],men:["electronics","sports","office"],children:["kids"]};var gm=curGender==="all"||(gmap[curGender]&&gmap[curGender].indexOf(pcat)>=0);var gmap={women:["fashion","beauty"],men:["electronics","sports","office"],children:["kids"]};var gm=curGender==="all"||(gmap[curGender]&&gmap[curGender].indexOf(pcat)>=0);
     var sm=!curSearch||p.name.toLowerCase().indexOf(curSearch.toLowerCase())>=0||p.cat.toLowerCase().indexOf(curSearch.toLowerCase())>=0;
     return cm&&sm&&gm;
   });
