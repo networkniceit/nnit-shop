@@ -197,7 +197,7 @@ fetch(API+"/api/products?limit=2000")
   .then(function(r){return r.json();})
   .then(function(data){
     PRODUCTS=data.products.map(function(p){
-      var rawcat=(p.category||"").toLowerCase().trim();var cmap={"clothing":"fashion","style":"fashion","home & garden":"home","sport":"sports"};rawcat=cmap[rawcat]||rawcat;return{id:String(p.id),name:p.name,cat:rawcat,img:p.image,price:parseFloat(p.price),old:parseFloat(p.original_price),rating:4.7,rv:100,badge:p.badge,desc:p.description,stock:p.stock};
+      var rawcat=(p.category||"").toLowerCase().trim();var cmap={"clothing":"fashion","style":"fashion","home & garden":"home","sport":"sports","sports":"sports","beauty":"beauty","kids":"kids","office":"office","food":"food","garden":"garden","pets":"pets","electronics":"electronics"};rawcat=cmap[rawcat]||rawcat;return{id:String(p.id),name:p.name,cat:rawcat,img:p.image,price:parseFloat(p.price),old:parseFloat(p.original_price),rating:4.7,rv:100,badge:p.badge,desc:p.description,stock:p.stock};
     });
     goHome();
   });
