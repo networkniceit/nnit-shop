@@ -341,7 +341,7 @@ function pcard(p){
   var eid=p.id.replace(/'/g,"");
   return '<div class="pcard" onclick="openModal(\''+eid+'\')">'+
     '<div class="pimg">'+
-      '<img src="'+p.img+'" alt="'+p.name+'" loading="lazy">'+
+      '<img src="'+p.img+'" alt="'+p.name+'" loading="lazy" onerror="this.style.display='none';this.parentNode.style.background='linear-gradient(135deg,#c8a96e22,#c8a96e44)';this.parentNode.innerHTML+='<div style=position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:10px;text-align:center;font-family:DM Sans,sans-serif;font-size:12px;font-weight:600;color:#c8a96e>'+p.name+'</div>'">'+
       (p.badge?'<div class="pbadge '+bc+'">'+p.badge+'</div>':'')+
       '<div class="pwish'+(w?" on":"")+'" onclick="event.stopPropagation();twUI(\''+eid+'\',this)">'+(w?"&#10084;":"&#9825;")+'</div>'+
     '</div>'+
