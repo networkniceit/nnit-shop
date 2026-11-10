@@ -141,7 +141,7 @@ footer{background:var(--dk);color:rgba(255,255,255,0.6);padding:44px 32px 22px;m
 </head>
 <body>
 
-<div class="ann">FREE SHIPPING OVER EUR 50 &nbsp;|&nbsp; USE CODE NNIT10 FOR 10% OFF</div>
+<div class="ann">NNIT.SHOP</div>
 
 <div class="top">
   <div class="logo" onclick="goHome()">NNIT<span>.</span>SHOP</div>
@@ -197,7 +197,7 @@ fetch(API+"/api/products?limit=2000")
   .then(function(r){return r.json();})
   .then(function(data){
     PRODUCTS=data.products.map(function(p){
-      var rawcat=(p.category||"").toLowerCase().trim();var cmap={"clothing":"fashion","style":"fashion","home & garden":"home","sport":"sports","sports":"sports","beauty":"beauty","kids":"kids","office":"office","food":"food","garden":"garden","pets":"pets","electronics":"electronics"};rawcat=cmap[rawcat]||rawcat;return{id:String(p.id),name:p.name,cat:rawcat,img:p.image,price:parseFloat(p.price),old:parseFloat(p.original_price),rating:4.7,rv:100,badge:p.badge,desc:p.description,stock:p.stock};
+      var rawcat=(p.category||"").toLowerCase().trim();var cmap={"clothing":"fashion","style":"fashion","home & garden":"home","sport":"sports","sports":"sports","beauty":"beauty","kids":"kids","office":"office","food":"food","garden":"garden","pets":"pets","electronics":"electronics"};rawcat=cmap[rawcat]||rawcat;return{id:String(p.id),name:p.name,cat:rawcat,img:p.image,price:parseFloat(p.price),old:0,rating:0,rv:0,badge:p.badge,desc:p.description,stock:p.stock};
     });
     goHome();
   });
@@ -348,7 +348,7 @@ function pcard(p){
     '<div class="pinfo">'+
       '<div class="pcat">'+p.cat.toUpperCase()+'</div>'+
       '<div class="pname">'+p.name+'</div>'+
-      '<div style="margin-bottom:6px"><span class="pstars">'+stars(p.rating)+'</span><span class="prev">('+p.rv+')</span></div>'+
+      (p.rv>0?'<div style="margin-bottom:6px"><span class="pstars">'+stars(p.rating)+'</span><span class="prev">('+p.rv+')</span></div>':'')+
       '<div class="pprice">'+
         '<span class="pcur">EUR '+p.price.toFixed(2)+'</span>'+
         (p.old?'<span class="pold">EUR '+p.old.toFixed(2)+'</span>':'')+
@@ -377,7 +377,7 @@ function openModal(id){
   document.getElementById("modal-info").innerHTML=
     '<div class="modal-cat">'+p.cat.toUpperCase()+'</div>'+
     '<div class="modal-title">'+p.name+'</div>'+
-    '<div style="margin-bottom:10px"><span class="pstars" style="font-size:15px">'+stars(p.rating)+'</span><span class="prev">('+p.rv+' reviews)</span></div>'+
+    (p.rv>0?'<div style="margin-bottom:10px"><span class="pstars" style="font-size:15px">'+stars(p.rating)+'</span><span class="prev">('+p.rv+' reviews)</span></div>':'')+
     '<div class="modal-price">EUR '+p.price.toFixed(2)+
       (p.old?' <span style="font-size:16px;color:var(--t3);text-decoration:line-through;font-family:var(--f)">EUR '+p.old.toFixed(2)+'</span>':'')+
       (disc>0?' <span style="font-size:13px;color:var(--gn);font-weight:700">-'+disc+'%</span>':'')+
@@ -428,8 +428,6 @@ function goHome(){
         '</div>'+
         '<div class="hstats">'+
           '<div><div class="hbox-num">'+PRODUCTS.length+'+</div><div class="hbox-lbl">PRODUCTS</div></div>'+
-          '<div><div class="hbox-num">99%</div><div class="hbox-lbl">SATISFACTION</div></div>'+
-          '<div><div class="hbox-num">24H</div><div class="hbox-lbl">DELIVERY</div></div>'+
         '</div>'+
       '</div>'+
       '<div class="hbox">'+
