@@ -359,7 +359,7 @@ function pcard(p){
   var eid=p.id.replace(/'/g,"");
   return '<div class="pcard" onclick="openModal(\''+eid+'\')">'+
     '<div class="pimg">'+
-      '<img src="'+p.img+'" alt="'+p.name+'" loading="lazy">'+
+      '<img src="'+p.img+'" alt="'+p.name+'" loading="lazy" referrerpolicy="no-referrer" onerror="var c=this.closest(\'.pcard\');if(c)c.style.display=\'none\'">'+
       (p.badge?'<div class="pbadge '+bc+'">'+p.badge+'</div>':'')+
       '<div class="pwish'+(w?" on":"")+'" onclick="event.stopPropagation();twUI(\''+eid+'\',this)">'+(w?"&#10084;":"&#9825;")+'</div>'+
     '</div>'+
