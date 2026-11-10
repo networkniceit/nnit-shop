@@ -202,7 +202,7 @@ fetch(API+"/api/products?limit=2000")
     ALLP=PRODUCTS.slice();
     var groups={};
     PRODUCTS.forEach(function(p){
-      var m=p.name.match(/^(.*\S)\s+-\s+([^-]+)$/);
+      var m=p.name.match(/^(.*\S)\s+-\s+(.+)$/);
       p._base=m?m[1]:p.name;p._lbl=m?m[2].trim():"";
       var k=p.cat+"|"+p._base;(groups[k]=groups[k]||[]).push(p);
     });
