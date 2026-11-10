@@ -190,7 +190,7 @@ footer{background:var(--dk);color:rgba(255,255,255,0.6);padding:44px 32px 22px;m
 </div>
 
 <script>
-var PRODUCTS=[];
+var PRODUCTS=[];var ALLP=[];;
 var API="https://nnit-ai-freelance-backend-production.up.railway.app";
 
 fetch(API+"/api/products?limit=2000")
@@ -199,6 +199,24 @@ fetch(API+"/api/products?limit=2000")
     PRODUCTS=data.products.map(function(p){
       var rawcat=(p.category||"").toLowerCase().trim();var cmap={"clothing":"fashion","style":"fashion","home & garden":"home","sport":"sports","sports":"sports","beauty":"beauty","kids":"kids","office":"office","food":"food","garden":"garden","pets":"pets","electronics":"electronics"};rawcat=cmap[rawcat]||rawcat;return{id:String(p.id),name:p.name,cat:rawcat,img:p.image,price:parseFloat(p.price),old:0,rating:0,rv:0,badge:p.badge,desc:p.description,stock:p.stock};
     });
+    ALLP=PRODUCTS.slice();
+    var groups={};
+    PRODUCTS.forEach(function(p){
+      var m=p.name.match(/^(.*\S)\s+-\s+([^-]+)$/);
+      p._base=m?m[1]:p.name;p._lbl=m?m[2].trim():"";
+      var k=p.cat+"|"+p._base;(groups[k]=groups[k]||[]).push(p);
+    });
+    var reps=[];
+    Object.keys(groups).forEach(function(k){
+      var g=groups[k];var rep0=g[0];
+      if(g.length>1&&g.every(function(x){return x._lbl;})){
+        rep0.variants=g.map(function(x){return{id:x.id,label:x._lbl,price:x.price,img:x.img,stock:x.stock};});
+        rep0.name=rep0._base;
+        rep0.price=Math.min.apply(null,g.map(function(x){return x.price;}));
+      }
+      reps.push(rep0);
+    });
+    PRODUCTS=reps;
     goHome();
   });
 
@@ -238,7 +256,7 @@ function updateBadges(){
 
 function addToCart(id,qty){
   qty=qty||1;
-  var p=PRODUCTS.find(function(x){return x.id===id;});
+  var p=ALLP.find(function(x){return x.id===id;});
   if(!p){return;}
   var ex=cart.find(function(x){return x.id===id;});
   if(ex){ex.qty+=qty;}
@@ -347,7 +365,7 @@ function pcard(p){
     '</div>'+
     '<div class="pinfo">'+
       '<div class="pcat">'+p.cat.toUpperCase()+'</div>'+
-      '<div class="pname">'+p.name+'</div>'+
+      '<div class="pname">'+p.name+'</div>'+(p.variants?'<div class="prev" style="margin-bottom:4px">'+p.variants.length+' options</div>':'')+
       (p.rv>0?'<div style="margin-bottom:6px"><span class="pstars">'+stars(p.rating)+'</span><span class="prev">('+p.rv+')</span></div>':'')+
       '<div class="pprice">'+
         '<span class="pcur">EUR '+p.price.toFixed(2)+'</span>'+
@@ -368,17 +386,18 @@ function twUI(id,el){
 
 function openModal(id){
   curModalId=id;
-  var p=PRODUCTS.find(function(x){return x.id===id;});
+  var p=ALLP.find(function(x){return x.id===id;});
   if(!p)return;
-  mQty=1;
+  mQty=1;window.curVarId=null;window.curVarP=p;
   var disc=p.old?Math.round((1-p.price/p.old)*100):0;
   var eid=p.id.replace(/'/g,"");
   document.getElementById("modal-img").innerHTML='<img src="'+p.img+'" alt="'+p.name+'" style="width:100%;height:100%;object-fit:cover">';
   document.getElementById("modal-info").innerHTML=
     '<div class="modal-cat">'+p.cat.toUpperCase()+'</div>'+
     '<div class="modal-title">'+p.name+'</div>'+
+    (p.variants?'<div style="margin-bottom:12px"><label style="font-size:13px;font-weight:700">Choose option: </label><select id="mvar" onchange="pickVar(this.value)" style="padding:8px;border-radius:8px;border:1px solid var(--br);font-family:var(--f)">'+p.variants.map(function(v,i){return '<option value="'+i+'">'+v.label+' - EUR '+v.price.toFixed(2)+'</option>';}).join('')+'</select></div>':'')+
     (p.rv>0?'<div style="margin-bottom:10px"><span class="pstars" style="font-size:15px">'+stars(p.rating)+'</span><span class="prev">('+p.rv+' reviews)</span></div>':'')+
-    '<div class="modal-price">EUR '+p.price.toFixed(2)+
+    '<div class="modal-price" id="mprice">'+(p.variants?'from ':'')+'EUR '+p.price.toFixed(2)+
       (p.old?' <span style="font-size:16px;color:var(--t3);text-decoration:line-through;font-family:var(--f)">EUR '+p.old.toFixed(2)+'</span>':'')+
       (disc>0?' <span style="font-size:13px;color:var(--gn);font-weight:700">-'+disc+'%</span>':'')+
     '</div>'+
@@ -390,12 +409,13 @@ function openModal(id){
       '<button class="qbtn" onclick="chgMQ(1)">+</button>'+
     '</div>'+
     '<div class="modal-actions">'+
-      '<button class="btn-cart" style="padding:13px;font-size:14px" onclick="addToCart(\''+eid+'\',mQty);closeModal()">Add to Cart</button>'+
+      '<button class="btn-cart" style="padding:13px;font-size:14px" onclick="addToCart(window.curVarId||\''+eid+'\',mQty);closeModal()">Add to Cart</button>'+
       '<button onclick="toggleWish(\''+eid+'\');showToast(\'Added to wishlist\')" style="width:100%;background:none;border:1px solid var(--br);padding:11px;border-radius:8px;font-size:14px;font-family:var(--f);cursor:pointer">+ Add to Wishlist</button>'+
     '</div>';
   document.getElementById("modal-ov").style.display="flex";
 }
 
+function pickVar(i){var p=window.curVarP;if(!p||!p.variants)return;var v=p.variants[i];window.curVarId=v.id;var e=document.getElementById("mprice");if(e)e.textContent="EUR "+v.price.toFixed(2);var im=document.querySelector("#modal-img img");if(im&&v.img)im.src=v.img;}
 function chgMQ(d){mQty=Math.max(1,mQty+d);var e=document.getElementById("mqv");if(e)e.textContent=mQty;}
 function closeModal(){document.getElementById("modal-ov").style.display="none";}
 
@@ -518,7 +538,7 @@ function goPage(page){
       '</div>'+renderFooter();
   }else if(page==="account"){
     var wishItems=wish.map(function(id){
-      var p=PRODUCTS.find(function(x){return x.id===id;});
+      var p=ALLP.find(function(x){return x.id===id;});
       if(!p)return "";
       var eid=p.id.replace(/'/g,"");
       return '<div style="display:flex;gap:12px;align-items:center;padding:10px 0;border-bottom:1px solid var(--br)">'+
