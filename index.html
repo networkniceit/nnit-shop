@@ -197,7 +197,7 @@ fetch(API+"/api/products?limit=2000")
   .then(function(r){return r.json();})
   .then(function(data){
     PRODUCTS=data.products.map(function(p){
-      var rawcat=(p.category||"").toLowerCase().trim();var cmap={"clothing":"fashion","style":"fashion","home & garden":"home","sport":"sports","sports":"sports","beauty":"beauty","kids":"kids","office":"office","food":"food","garden":"garden","pets":"pets","electronics":"electronics"};rawcat=cmap[rawcat]||rawcat;return{id:String(p.id),name:p.name,cat:rawcat,img:p.image,price:parseFloat(p.price),old:0,rating:0,rv:0,badge:p.badge,desc:p.description,stock:p.stock};
+      var rawcat=(p.category||"").toLowerCase().trim();var cmap={"clothing":"fashion","style":"fashion","home & garden":"home","sport":"sports","sports":"sports","beauty":"beauty","kids":"kids","office":"office","food":"food","garden":"garden","pets":"pets","electronics":"electronics"};rawcat=cmap[rawcat]||rawcat;return{id:String(p.id),name:p.name,cat:rawcat,img:p.image,price:parseFloat(p.price),old:0,rating:0,rv:0,badge:p.badge,desc:p.description,stock:p.stock,link:p.link||""};
     });
     ALLP=PRODUCTS.slice();
     var groups={};
@@ -372,7 +372,7 @@ function pcard(p){
         (p.old?'<span class="pold">EUR '+p.old.toFixed(2)+'</span>':'')+
         (disc>0?'<span class="psave">-'+disc+'%</span>':'')+
       '</div>'+
-      '<button class="btn-cart" onclick="event.stopPropagation();addToCart(\''+eid+'\')">Add to Cart</button>'+
+      (p.link?'<a class="btn-cart" href="'+p.link+'" target="_blank" rel="sponsored noopener" onclick="event.stopPropagation()" style="display:block;text-align:center;text-decoration:none;box-sizing:border-box">View at retailer</a><div class="prev" style="margin-top:4px;font-size:11px">Ad / affiliate link</div>':'<button class="btn-cart" onclick="event.stopPropagation();addToCart(\''+eid+'\')">Add to Cart</button>')+
     '</div>'+
   '</div>';
 }
@@ -402,14 +402,14 @@ function openModal(id){
       (disc>0?' <span style="font-size:13px;color:var(--gn);font-weight:700">-'+disc+'%</span>':'')+
     '</div>'+
     '<div class="modal-desc">'+p.desc+'</div>'+
-    '<div class="modal-stock">In stock: '+p.stock+' available</div>'+
+    (typeof p.stock==='number'?'<div class="modal-stock">In stock: '+p.stock+' available</div>':'')+
     '<div class="mqrow"><span class="mqlbl">Qty:</span>'+
       '<button class="qbtn" onclick="chgMQ(-1)">-</button>'+
       '<span class="qval" id="mqv">1</span>'+
       '<button class="qbtn" onclick="chgMQ(1)">+</button>'+
     '</div>'+
     '<div class="modal-actions">'+
-      '<button class="btn-cart" style="padding:13px;font-size:14px" onclick="addToCart(window.curVarId||\''+eid+'\',mQty);closeModal()">Add to Cart</button>'+
+      (p.link?'<a class="btn-cart" href="'+p.link+'" target="_blank" rel="sponsored noopener" style="display:block;text-align:center;text-decoration:none;padding:13px;font-size:14px;box-sizing:border-box">View at retailer</a><div class="prev" style="font-size:11px;text-align:center">Ad / affiliate link: you buy from the retailer, we may earn a commission.</div>':'<button class="btn-cart" style="padding:13px;font-size:14px" onclick="addToCart(window.curVarId||\''+eid+'\',mQty);closeModal()">Add to Cart</button>')+
       '<button onclick="toggleWish(\''+eid+'\');showToast(\'Added to wishlist\')" style="width:100%;background:none;border:1px solid var(--br);padding:11px;border-radius:8px;font-size:14px;font-family:var(--f);cursor:pointer">+ Add to Wishlist</button>'+
     '</div>';
   document.getElementById("modal-ov").style.display="flex";
