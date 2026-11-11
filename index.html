@@ -330,7 +330,7 @@ function renderCart(){
 }
 
 function doCheckout(){
-  showToast("Checkout - Connect Stripe payment to activate");
+  showToast("Checkout is not open yet. Your cart is saved on this device.");
   closeCart();
 }
 
@@ -528,13 +528,8 @@ function goPage(page){
     document.getElementById("page").innerHTML=
       '<div class="page-about">'+
         '<div class="sec-title" style="margin-bottom:18px">About NNIT Shop</div>'+
-        '<p style="font-size:15px;color:var(--t2);line-height:1.9;margin-bottom:14px">NNIT Shop is your trusted online marketplace for quality products at competitive prices.</p>'+
-        '<p style="font-size:15px;color:var(--t2);line-height:1.9;margin-bottom:28px">We ship to 50+ countries and offer 30-day returns on all products.</p>'+
-        '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">'+
-          '<div class="card-box" style="text-align:center"><div style="font-family:var(--d);font-size:22px;color:var(--ac);margin-bottom:8px">FAST</div><div style="font-weight:600;margin-bottom:4px">Fast Shipping</div><div style="font-size:13px;color:var(--t2)">24-48 hour delivery</div></div>'+
-          '<div class="card-box" style="text-align:center"><div style="font-family:var(--d);font-size:22px;color:var(--ac);margin-bottom:8px">SAFE</div><div style="font-weight:600;margin-bottom:4px">Secure Payments</div><div style="font-size:13px;color:var(--t2)">100% secure checkout</div></div>'+
-          '<div class="card-box" style="text-align:center"><div style="font-family:var(--d);font-size:22px;color:var(--ac);margin-bottom:8px">EASY</div><div style="font-weight:600;margin-bottom:4px">Easy Returns</div><div style="font-size:13px;color:var(--t2)">30-day return policy</div></div>'+
-        '</div>'+
+        '<p style="font-size:15px;color:var(--t2);line-height:1.9;margin-bottom:14px">NNIT Shop is being built by NNIT Enterprise, Minden, Germany. The products shown come from partner retailers and the prices are theirs.</p>'+
+        '<p style="font-size:15px;color:var(--t2);line-height:1.9;margin-bottom:14px">Online checkout is not open yet. Shipping, payment and return terms will be published here before it opens.</p>'+
       '</div>'+renderFooter();
   }else if(page==="account"){
     var wishItems=wish.map(function(id){
