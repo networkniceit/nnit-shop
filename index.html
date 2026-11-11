@@ -152,9 +152,10 @@ footer{background:var(--dk);color:rgba(255,255,255,0.6);padding:44px 32px 22px;m
     <a onclick="goShop('fashion')">Fashion</a>
     <a onclick="goShop('home')">Home</a>
     <a onclick="goShop('garden')">Garden</a>
-    <a onclick="goShop('pets')">Pets</a>
+    <a onclick="goShop('beauty')">Beauty</a>
+    <a onclick="goShop('kids')">Kids</a>
+    <a onclick="goShop('jewellery')">Jewellery</a>
     <a onclick="goShop('office')">Office</a>
-    <a onclick="goShop('food')">Food</a>
     <a onclick="goPage('about')">About</a>
   </nav>
   <div class="ta">
@@ -217,6 +218,7 @@ fetch(API+"/api/products?limit=2000")
       reps.push(rep0);
     });
     PRODUCTS=reps;
+    CATS=CATS.filter(function(c){return c.id==="all"||PRODUCTS.filter(function(p){return p.cat===c.id;}).length>=3;});
     goHome();
   });
 
@@ -231,7 +233,8 @@ var CATS=[
   {id:"garden",lbl:"GARDEN",name:"Garden"},
   {id:"pets",lbl:"PETS",name:"Pets"},
   {id:"office",lbl:"OFFICE",name:"Office"},
-  {id:"food",lbl:"FOOD",name:"Food"}
+  {id:"food",lbl:"FOOD",name:"Food"},
+  {id:"jewellery",lbl:"JEWELLERY",name:"Jewellery"}
 ];
 
 var cart=JSON.parse(localStorage.getItem("nc3")||"[]");
@@ -441,13 +444,13 @@ function goHome(){
       '<div>'+
         '<div class="htag">NEW ARRIVALS 2026</div>'+
         '<div class="htitle">Shop The Best<br><em>Deals</em> Online</div>'+
-        '<div class="hsub">Discover quality products at competitive prices. Free shipping on orders over EUR 50.</div>'+
+        '<div class="hsub">Discover products from our retail partners. You buy directly from the retailer.</div>'+
         '<div class="hbtns">'+
           '<button class="btn-gold" onclick="goShop(\'all\')">Shop Now</button>'+
           '<button class="btn-out" onclick="goShop(\'electronics\')">Electronics</button>'+
         '</div>'+
         '<div class="hstats">'+
-          '<div><div class="hbox-num">'+PRODUCTS.length+'+</div><div class="hbox-lbl">PRODUCTS</div></div>'+
+          '<div><div class="hbox-num">'+PRODUCTS.length+'</div><div class="hbox-lbl">PRODUCTS</div></div>'+
         '</div>'+
       '</div>'+
       '<div class="hbox">'+
@@ -563,7 +566,7 @@ function renderFooter(){
   return '<footer>'+
     '<div class="fg">'+
       '<div><div class="fb">NNIT.SHOP</div><div class="fd">Your trusted online marketplace. Quality products, fast delivery worldwide.</div></div>'+
-      '<div><div class="ft">SHOP</div><span class="fl" onclick="goShop(\'electronics\')">Electronics</span><span class="fl" onclick="goShop(\'fashion\')">Fashion</span><span class="fl" onclick="goShop(\'home\')">Home</span><span class="fl" onclick="goShop(\'sports\')">Sports</span><span class="fl" onclick="goShop(\'garden\')">Garden</span><span class="fl" onclick="goShop(\'pets\')">Pets</span></div>'+
+      '<div><div class="ft">SHOP</div><span class="fl" onclick="goShop(\'electronics\')">Electronics</span><span class="fl" onclick="goShop(\'fashion\')">Fashion</span><span class="fl" onclick="goShop(\'home\')">Home</span><span class="fl" onclick="goShop(\'sports\')">Sports</span><span class="fl" onclick="goShop(\'garden\')">Garden</span><span class="fl" onclick="goShop(\'beauty\')">Beauty</span><span class="fl" onclick="goShop(\'kids\')">Kids</span><span class="fl" onclick="goShop(\'jewellery\')">Jewellery</span></div>'+
       '<div><div class="ft">HELP</div><span class="fl">Shipping Info</span><span class="fl">Returns</span><span class="fl">FAQ</span><span class="fl">Contact Us</span></div>'+
       '<div><div class="ft">COMPANY</div><span class="fl" onclick="goPage(\'about\')">About Us</span><span class="fl">Blog</span><span class="fl">Careers</span><span class="fl">Privacy Policy</span></div>'+
     '</div>'+
