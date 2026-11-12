@@ -198,7 +198,7 @@ fetch(API+"/api/products?limit=2000")
   .then(function(r){return r.json();})
   .then(function(data){
     PRODUCTS=data.products.map(function(p){
-      var rawcat=(p.category||"").toLowerCase().trim();var cmap={"clothing":"fashion","style":"fashion","home & garden":"home","sport":"sports","sports":"sports","beauty":"beauty","kids":"kids","office":"office","food":"food","garden":"garden","pets":"pets","electronics":"electronics"};rawcat=cmap[rawcat]||rawcat;return{id:String(p.id),name:p.name,cat:rawcat,img:p.image,price:parseFloat(p.price),old:0,rating:0,rv:0,badge:p.badge,desc:p.description,stock:p.stock,link:p.link||""};
+      var rawcat=(p.category||"").toLowerCase().trim();var cmap={"clothing":"fashion","style":"fashion","home & garden":"home","sport":"sports","sports":"sports","beauty":"beauty","kids":"kids","office":"office","garden":"garden","electronics":"electronics"};rawcat=cmap[rawcat]||rawcat;return{id:String(p.id),name:p.name,cat:rawcat,img:p.image,price:parseFloat(p.price),old:0,rating:0,rv:0,badge:p.badge,desc:p.description,stock:p.stock,link:p.link||""};
     });
     ALLP=PRODUCTS.slice();
     var groups={};
@@ -231,9 +231,7 @@ var CATS=[
   {id:"beauty",lbl:"BEAUTY",name:"Beauty"},
   {id:"kids",lbl:"KIDS",name:"Kids"},
   {id:"garden",lbl:"GARDEN",name:"Garden"},
-  {id:"pets",lbl:"PETS",name:"Pets"},
   {id:"office",lbl:"OFFICE",name:"Office"},
-  {id:"food",lbl:"FOOD",name:"Food"},
   {id:"jewellery",lbl:"JEWELLERY",name:"Jewellery"}
 ];
 
@@ -431,7 +429,7 @@ function goHome(){
   curSearch="";
   var inp=document.getElementById("search-inp");
   if(inp)inp.value="";
-  var cats=["electronics","fashion","home","sports","beauty","kids","garden","pets","office","food"];
+  var cats=["electronics","fashion","home","sports","beauty","kids","garden","office","jewellery"];
   var featured=[];
   cats.forEach(function(c){
     var cp=PRODUCTS.filter(function(p){return p.cat===c&&(p.badge==="HOT"||p.badge==="NEW");});
