@@ -360,7 +360,7 @@ function pcard(p){
   var eid=p.id.replace(/'/g,"");
   return '<div class="pcard" onclick="openModal(\''+eid+'\')">'+
     '<div class="pimg">'+
-      '<img src="'+p.img+'" alt="'+p.name+'" loading="lazy" referrerpolicy="no-referrer" onerror="var c=this.closest(\'.pcard\');if(c)c.style.display=\'none\'">'+
+      '<img src="'+p.img+'" alt="'+p.name+'" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.visibility=\'hidden\'">'+
       (p.badge?'<div class="pbadge '+bc+'">'+p.badge+'</div>':'')+
       '<div class="pwish'+(w?" on":"")+'" onclick="event.stopPropagation();twUI(\''+eid+'\',this)">'+(w?"&#10084;":"&#9825;")+'</div>'+
     '</div>'+
@@ -373,7 +373,7 @@ function pcard(p){
         (p.old?'<span class="pold">EUR '+p.old.toFixed(2)+'</span>':'')+
         (disc>0?'<span class="psave">-'+disc+'%</span>':'')+
       '</div>'+
-      (p.link?'<a class="btn-cart" href="'+p.link+'" data-partner="1" rel="sponsored noopener" onclick="event.stopPropagation()" style="display:block;text-align:center;text-decoration:none;box-sizing:border-box">View at retailer</a><div class="prev" style="margin-top:4px;font-size:11px">Ad / affiliate link</div>':'<button class="btn-cart" onclick="event.stopPropagation();addToCart(\''+eid+'\')">Add to Cart</button>')+
+      '<button class="btn-cart" onclick="event.stopPropagation();openModal(\''+eid+'\')">View product</button>'+
     '</div>'+
   '</div>';
 }
@@ -410,7 +410,7 @@ function openModal(id){
       '<button class="qbtn" onclick="chgMQ(1)">+</button>'+
     '</div>'+
     '<div class="modal-actions">'+
-      (p.link?'<a class="btn-cart" href="'+p.link+'" data-partner="1" rel="sponsored noopener" style="display:block;text-align:center;text-decoration:none;padding:13px;font-size:14px;box-sizing:border-box">View at retailer</a><div class="prev" style="font-size:11px;text-align:center">Ad / affiliate link: you buy from the retailer, we may earn a commission.</div>':'<button class="btn-cart" style="padding:13px;font-size:14px" onclick="addToCart(window.curVarId||\''+eid+'\',mQty);closeModal()">Add to Cart</button>')+
+      (p.link?'<p class="prev" role="status">Checkout for this imported product is not connected to NNIT yet.</p>':'<button class="btn-cart" style="padding:13px;font-size:14px" onclick="addToCart(window.curVarId||\''+eid+'\',mQty);closeModal()">Add to Cart</button>')+
       '<button onclick="toggleWish(\''+eid+'\');showToast(\'Added to wishlist\')" style="width:100%;background:none;border:1px solid var(--br);padding:11px;border-radius:8px;font-size:14px;font-family:var(--f);cursor:pointer">+ Add to Wishlist</button>'+
     '</div>';
   document.getElementById("modal-ov").style.display="flex";
@@ -581,26 +581,7 @@ function showToast(msg){
 updateBadges();
 </script>
 
-<div id="partner-ov" style="display:none;position:fixed;inset:0;z-index:99999;background:#0b0b0f;flex-direction:column">
-  <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:#14141b;color:#fff;font:600 14px 'DM Sans',sans-serif">
-    <button id="partner-back" style="padding:8px 14px;border-radius:8px;border:0;background:#ffd54a;color:#111;font-weight:700;cursor:pointer">&larr; Back to NNIT Shop</button>
-    <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;opacity:.85">Partner page, shown inside NNIT Shop</span>
-    <a id="partner-ext" href="#" target="_blank" rel="noopener" style="color:#9ec1ff;font-size:12px">Page blank? Open it in a browser tab</a>
-  </div>
-  <iframe id="partner-fr" style="flex:1;border:0;background:#fff;width:100%" referrerpolicy="no-referrer-when-downgrade" allow="payment *; fullscreen"></iframe>
-</div>
-<script>
-(function(){
-  var ov=document.getElementById("partner-ov"),fr=document.getElementById("partner-fr"),ext=document.getElementById("partner-ext");
-  function close(){ov.style.display="none";fr.src="about:blank";document.body.style.overflow="";}
-  document.getElementById("partner-back").onclick=close;
-  document.addEventListener("click",function(e){
-    var a=e.target.closest&&e.target.closest("a[data-partner]"); if(!a)return;
-    e.preventDefault();e.stopPropagation();
-    var u=a.getAttribute("href"); fr.src=u; ext.href=u; ov.style.display="flex"; document.body.style.overflow="hidden";
-  },true);
-})();
-</script>
+
 </body>
 </html> 
 
